@@ -1,11 +1,11 @@
 {
-    "ID":"b05fac65232348dba4e603f7b49bd5b5",
-    "ActionKeyword":"weather",
-    "Name":"Yahoo! Weather",
-    "Description":"Get Yahoo! Weather from Wox",
-    "Author":"orzFly",
-    "Version":"1.0",
-    "Language":"csharp",
-    "Website":"https://github.com/orzFly/Wox.Plugin.Weather",
-    "ExecuteFileName":"Wox.Plugin.Weather.dll"
+    "ID": "b05fac65232348dba4e603f7b49bd5b5",
+    "ActionKeyword": "weather",
+    "Name": "Yahoo! Weather",
+    "Description": "Get Yahoo! Weather from Wox",
+    "Author": "orzFly",
+    "Version": "1.0.0",
+    "Language": "csharp",
+    "Website": "https://github.com/orzFly/Wox.Plugin.Weather",
+    "ExecuteFileName": "Wox.Plugin.Weather.dll"
 }
