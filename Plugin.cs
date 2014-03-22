@@ -18,16 +18,13 @@ namespace Wox.Plugin.Weather
             this.weatherCache = new OrderedDictionary();
         }
 
-        void CleanCache()
+        void CleanCache(OrderedDictionary o)
         {
-            Array.ForEach(new OrderedDictionary[] { this.placeCache, this.weatherCache }, o =>
-            {
-                foreach (var item in o.OfType<KeyValuePair<object, DateTime>>().Select(t => (DateTime.UtcNow - t.Value).TotalMinutes > 10))
-                    o.Remove(item);
+            foreach (var item in o.OfType<KeyValuePair<object, DateTime>>().Select(t => (DateTime.UtcNow - t.Value).TotalMinutes > 10))
+                o.Remove(item);
 
-                while (o.Count > 20)
-                    o.RemoveAt(0);
-            });
+            while (o.Count > 20)
+                o.RemoveAt(0);
         }
 
         String GetIcon(String code)
@@ -47,7 +44,7 @@ namespace Wox.Plugin.Weather
 
         public List<Result> Query(Query query)
         {
-            CleanCache();
+            CleanCache(weatherCache);
 
             var qs = query.GetAllRemainingParameter();
             if (!String.IsNullOrEmpty(qs))
@@ -65,6 +62,7 @@ namespace Wox.Plugin.Weather
                     }
                     if (places != null) break;
                 }
+                CleanCache(placeCache);
                 if (places == null)
                 {
                     if (placeCache.Contains(qs))
