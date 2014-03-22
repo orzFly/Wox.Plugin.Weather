@@ -10,8 +10,8 @@ namespace Wox.Plugin.Weather
     {
         [Serializable] private class YQLResult<T>
         {
-            public YQLQuery<T> query;
-            public YQLError error;
+            public YQLQuery<T> query = null;
+            public YQLError error = null;
         }
         [Serializable] private class YQLError
         {
