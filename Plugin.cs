@@ -224,7 +224,7 @@ namespace Wox.Plugin.Weather
                     return list;
                 }
             }
-            return null;
+            return new List<Result>();
         }
     }
 }

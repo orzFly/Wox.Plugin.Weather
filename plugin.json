@@ -4,7 +4,7 @@
     "Name": "Yahoo! Weather",
     "Description": "Get Yahoo! Weather from Wox",
     "Author": "orzFly",
-    "Version": "1.0.0",
+    "Version": "1.0.1",
     "Language": "csharp",
     "Website": "https://github.com/orzFly/Wox.Plugin.Weather",
     "ExecuteFileName": "Wox.Plugin.Weather.dll"
