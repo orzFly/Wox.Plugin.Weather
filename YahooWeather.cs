@@ -15,15 +15,15 @@ namespace Wox.Plugin.Weather
         }
         [Serializable] private class YQLError
         {
-            public string lang;
-            public string description;
+            public string lang = null;
+            public string description = null;
         }
         [Serializable] private class YQLQuery<T>
         {
-            public int count;
-            public string created;
-            public string lang;
-            public T results;
+            public int count = 0;
+            public string created = null;
+            public string lang = null;
+            public T results = default(T);
         }
         [Serializable] private class YQLException : Exception
         {
@@ -102,11 +102,11 @@ namespace Wox.Plugin.Weather
 
         [Serializable] private class PlaceResult
         {
-            public Place Result;
+            public Place Result = null;
         }
         [Serializable] private class PlaceResults
         {
-            public List<Place> Result;
+            public List<Place> Result = null;
         }
         [Serializable] public class Place: IWoeID
         {
@@ -167,13 +167,13 @@ namespace Wox.Plugin.Weather
 
         [Serializable] private class PlaceSuggestionResult
         {
-            public string q;
-            public List<PlaceSuggestionEncoded> r;
+            public string q = null;
+            public List<PlaceSuggestionEncoded> r = null;
         }
         [Serializable] internal class PlaceSuggestionEncoded
         {
-            public string k;
-            public string d;
+            public string k = null;
+            public string d = null;
         }
         [Serializable] public class PlaceSuggestion: IWoeID
         {
@@ -235,7 +235,7 @@ namespace Wox.Plugin.Weather
 
         [Serializable] private class WeatherResult
         {
-            public Weather channel;
+            public Weather channel = null;
         }
         [Serializable] public class Weather
         {

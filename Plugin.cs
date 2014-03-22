@@ -53,7 +53,7 @@ namespace Wox.Plugin.Weather
             if (!String.IsNullOrEmpty(qs))
             {
                 List<YahooWeather.PlaceSuggestion> places = null;
-                foreach (var list in placeCache.OfType<KeyValuePair<object, DateTime>>().Select(o => (List<YahooWeather.PlaceSuggestion>)o.Key))
+                foreach (var list in placeCache.Values.OfType<KeyValuePair<object, DateTime>>().Select(o => (List<YahooWeather.PlaceSuggestion>)o.Key))
                 {
                     foreach (var item in list)
                     {
@@ -154,7 +154,7 @@ namespace Wox.Plugin.Weather
                                 Action = action
                             };
                         }));
-
+                        
                         return list;
                     }
                 }
