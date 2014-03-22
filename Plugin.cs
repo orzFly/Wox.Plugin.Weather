@@ -139,7 +139,7 @@ namespace Wox.Plugin.Weather
                         var list = new List<Result>();
                         list.Add(new Result()
                         {
-                            Title = weather.woe.ToString(),
+                            Title = weather.woe.ToString() + " - Yahoo! Weather",
                             SubTitle = weather.item.pubDate,
                             IcoPath = GetIcon("favicon", "ico"),
                             Action = action
