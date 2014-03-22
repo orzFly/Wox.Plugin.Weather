@@ -95,15 +95,20 @@ namespace Wox.Plugin.Weather
             throw new System.Net.WebException("Failed to query YQL: " + response.StatusDescription, null, System.Net.WebExceptionStatus.ProtocolError, response);
         }
 
-        [Serializable] public class PlaceResult
+        public interface IWoeID
+        {
+            String WoeID { get; }
+        }
+
+        [Serializable] private class PlaceResult
         {
             public Place Result;
         }
-        [Serializable] public class PlaceResults
+        [Serializable] private class PlaceResults
         {
             public List<Place> Result;
         }
-        [Serializable] public class Place
+        [Serializable] public class Place: IWoeID
         {
             public String quality;
             public String latitude;
@@ -139,6 +144,10 @@ namespace Wox.Plugin.Weather
             {
                 return String.Join(", ", new string[] { line1, line2, line3, line4}.Where(o => !string.IsNullOrEmpty(o)).ToArray());
             }
+            public string WoeID
+            {
+                get { return woeid; }
+            }
         }
         public static List<Place> QueryPlace(string query)
         {
@@ -156,7 +165,75 @@ namespace Wox.Plugin.Weather
             return null;
         }
 
-        [Serializable] public class WeatherResult
+        [Serializable] private class PlaceSuggestionResult
+        {
+            public string q;
+            public List<PlaceSuggestionEncoded> r;
+        }
+        [Serializable] internal class PlaceSuggestionEncoded
+        {
+            public string k;
+            public string d;
+        }
+        [Serializable] public class PlaceSuggestion: IWoeID
+        {
+            public string k;
+            public string type;
+            public string iso;
+            public string woeid;
+            public string lon;
+            public string lat;
+            public string s;
+            public string c;
+
+            public PlaceSuggestion() { }
+            internal PlaceSuggestion(PlaceSuggestionEncoded e)
+            {
+                k = e.k;
+                var str = e.d.Split(new char[] {':'}, 2);
+                type = str.Length > 0 ? str[0] : null;
+
+                if (str.Length > 1)
+                {
+                    var args = System.Web.HttpUtility.ParseQueryString(str[1]);
+                    iso = args["iso"];
+                    woeid = args["woeid"];
+                    lon = args["lon"];
+                    lat = args["lat"];
+                    s = args["s"];
+                    c = args["c"];
+                }
+            }
+
+            public string WoeID
+            {
+                get { return woeid; }
+            }
+
+            public override string ToString()
+            {
+                return String.Join(", ", new string[] { k, s, c }.Where(o => !string.IsNullOrEmpty(o)).ToArray());
+            }
+        }
+        public static List<PlaceSuggestion> QueryPlaceSuggestion(string query)
+        {
+            var response = HttpRequest.CreateGetHttpResponse("https://search.yahoo.com/sugg/gossip/gossip-gl-location/?appid=weather&output=sd1&command=" + System.Uri.EscapeUriString(query), null, null, null);
+            var s = response.GetResponseStream();
+            if (s != null)
+            {
+                var json = new System.IO.StreamReader(s).ReadToEnd();
+                var result = JsonConvert.DeserializeObject<PlaceSuggestionResult>(json);
+
+                if (result.r != null)
+                {
+                    return result.r.ConvertAll(o => new PlaceSuggestion(o));
+                }
+            }
+
+            throw new System.Net.WebException("Failed to query PlaceSuggestion: " + response.StatusDescription, null, System.Net.WebExceptionStatus.ProtocolError, response);
+        }
+
+        [Serializable] private class WeatherResult
         {
             public Weather channel;
         }
@@ -174,7 +251,7 @@ namespace Wox.Plugin.Weather
             public Atmosphere atmosphere;
             public Astronomy astronomy;
             public Item item;
-            public Place place;
+            public IWoeID woe;
 
             [Serializable] public class Location
             {
@@ -213,7 +290,7 @@ namespace Wox.Plugin.Weather
                 [JsonProperty("lat")] public string latitute;
                 [JsonProperty("long")] public string longitute;
                 public string link;
-                public string pubData;
+                public string pubDate;
                 public Condition condition;
                 public string description;
                 public List<Forecast> forecast;
@@ -247,12 +324,12 @@ namespace Wox.Plugin.Weather
             var result = YQLExec<WeatherResult>(yql);
             return result != null ? result.channel : null;
         }
-        public static Weather QueryWeather(Place place, TemperatureUnit unit)
+        public static Weather QueryWeather(IWoeID place, TemperatureUnit unit)
         {
-            var result = QueryWeather(place.woetype, unit);
+            var result = QueryWeather(place.WoeID, unit);
             if (result != null)
             {
-                result.place = place;
+                result.woe = place;
                 return result;
             }
             return null;
