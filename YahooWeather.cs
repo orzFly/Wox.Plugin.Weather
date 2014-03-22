@@ -320,7 +320,7 @@ namespace Wox.Plugin.Weather
         }
         public static Weather QueryWeather(string woeid, TemperatureUnit unit)
         {
-            var yql = String.Format("select * from weather.forecast where woeid=\"{0}\" and u = \"{1}\"", YQLEscape(woeid), unit == TemperatureUnit.Centigrade ? "c" : "f");
+            var yql = String.Format("select * from weather.forecast where woeid=\"{0}\" and u = \"{1}\"", YQLEscape(woeid), unit == TemperatureUnit.Fahrenheit ? "f" : "c");
             var result = YQLExec<WeatherResult>(yql);
             return result != null ? result.channel : null;
         }
